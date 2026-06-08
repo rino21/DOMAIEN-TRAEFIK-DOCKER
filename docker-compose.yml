@@ -1,61 +1,78 @@
 services:
-  # ─── Infrastructure ──────────────────────────────────────────────────────────
-  
-  # Service Nginx pour banane
+
   banane:
     image: nginx:alpine
     volumes:
       - ./banane-content:/usr/share/nginx/html:ro
+
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.banane.rule=Host(`banane.gpc.vic-tec.online`)
-      - traefik.http.routers.banane.tls=true
-      - traefik.http.routers.banane.tls.certresolver=lets-encrypt
-      - traefik.http.routers.banane.entrypoints=websecure
-      - traefik.http.routers.banane-http.rule=Host(`banane.gpc.vic-tec.online`)
-      - traefik.http.routers.banane-http.entrypoints=web
-      - traefik.http.routers.banane-http.middlewares=redirect-to-https
-      - traefik.http.services.banane.loadbalancer.server.port=80
+      - "traefik.enable=true"
+
+      # HTTPS
+      - "traefik.http.routers.banane.rule=Host(`banane.gpc.vic-tec.online`)"
+      - "traefik.http.routers.banane.entrypoints=websecure"
+      - "traefik.http.routers.banane.tls=true"
+      - "traefik.http.routers.banane.tls.certresolver=letsencrypt"
+
+      # HTTP
+      - "traefik.http.routers.banane-http.rule=Host(`banane.gpc.vic-tec.online`)"
+      - "traefik.http.routers.banane-http.entrypoints=web"
+      - "traefik.http.routers.banane-http.middlewares=redirect-to-https@file"
+
+      # Service
+      - "traefik.http.services.banane.loadbalancer.server.port=80"
+
     networks:
       - fruits
 
-  # Service Nginx pour orange
+
   orange:
     image: nginx:alpine
     volumes:
       - ./orange-content:/usr/share/nginx/html:ro
+
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.orange.rule=Host(`orange.gpc.vic-tec.online`)
-      - traefik.http.routers.orange.tls=true
-      - traefik.http.routers.orange.tls.certresolver=lets-encrypt
-      - traefik.http.routers.orange.entrypoints=websecure
-      - traefik.http.routers.orange-http.rule=Host(`orange.gpc.vic-tec.online`)
-      - traefik.http.routers.orange-http.entrypoints=web
-      - traefik.http.routers.orange-http.middlewares=redirect-to-https
-      - traefik.http.services.orange.loadbalancer.server.port=80
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.orange.rule=Host(`orange.gpc.vic-tec.online`)"
+      - "traefik.http.routers.orange.entrypoints=websecure"
+      - "traefik.http.routers.orange.tls=true"
+      - "traefik.http.routers.orange.tls.certresolver=letsencrypt"
+
+      - "traefik.http.routers.orange-http.rule=Host(`orange.gpc.vic-tec.online`)"
+      - "traefik.http.routers.orange-http.entrypoints=web"
+      - "traefik.http.routers.orange-http.middlewares=redirect-to-https@file"
+
+      - "traefik.http.services.orange.loadbalancer.server.port=80"
+
     networks:
       - fruits
 
-  # Service Nginx pour avocat
+
   avocat:
     image: nginx:alpine
     volumes:
       - ./avocat-content:/usr/share/nginx/html:ro
+
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.avocat.rule=Host(`avocat.gpc.vic-tec.online`)
-      - traefik.http.routers.avocat.tls=true
-      - traefik.http.routers.avocat.tls.certresolver=lets-encrypt
-      - traefik.http.routers.avocat.entrypoints=websecure
-      - traefik.http.routers.avocat-http.rule=Host(`avocat.gpc.vic-tec.online`)
-      - traefik.http.routers.avocat-http.entrypoints=web
-      - traefik.http.routers.avocat-http.middlewares=redirect-to-https
-      - traefik.http.services.avocat.loadbalancer.server.port=80
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.avocat.rule=Host(`avocat.gpc.vic-tec.online`)"
+      - "traefik.http.routers.avocat.entrypoints=websecure"
+      - "traefik.http.routers.avocat.tls=true"
+      - "traefik.http.routers.avocat.tls.certresolver=letsencrypt"
+
+      - "traefik.http.routers.avocat-http.rule=Host(`avocat.gpc.vic-tec.online`)"
+      - "traefik.http.routers.avocat-http.entrypoints=web"
+      - "traefik.http.routers.avocat-http.middlewares=redirect-to-https@file"
+
+      - "traefik.http.services.avocat.loadbalancer.server.port=80"
+
     networks:
       - fruits
 
+
 networks:
-  web:
+  fruits:
     external: true
     name: traefik_fruits
